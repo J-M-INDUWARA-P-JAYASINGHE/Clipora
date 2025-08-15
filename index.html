@@ -5,15 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Cllipora AI</title>
 
-<!-- Link Preview Metadata -->
+<!-- Social -->
 <meta property="og:title" content="Cllipora AI" />
-<meta property="og:description" content="Chat with Black Hat AI — Fast, sleek, and private AI assistant." />
+<meta property="og:description" content="Chat with Black Hat AI — ultra-fast with live streaming replies." />
 <meta property="og:image" content="https://i.ibb.co/zWjn5ykZ/512.png" />
 <meta property="og:url" content="https://cllipora.netlify.app" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="Cllipora AI" />
-<meta name="twitter:description" content="Chat with Black Hat AI — Fast, sleek, and private AI assistant." />
-<meta name="twitter:image" content="https://i.ibb.co/zWjn5ykZ/512.png" />
 
 <link rel="icon" href="https://i.ibb.co/zWjn5ykZ/512.png" type="image/png">
 <script src="https://cdn.tailwindcss.com"></script>
@@ -54,7 +51,24 @@
     aside.open { left: 0; }
     #gradientPlaceholder { font-size: clamp(1.2rem, 6vw, 2rem); }
   }
+  
+  #model,
+#fastTokens,
+#model + label,
+#fastTokens {
+  display: none !important;
+}
+
+
+
+  
 </style>
+
+<!-- Markdown rendering -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
 </head>
 <body class="bg-[#0b0f14] text-gray-200">
 
@@ -73,31 +87,10 @@
   justify-content: center;
   transition: opacity 0.5s ease;
 ">
-  <!-- Logo -->
-  <img src="https://i.ibb.co/zWjn5ykZ/512.png"
-       alt="Black Hat AI Logo"
-       style="width: 100px; height: 100px;" />
-
-  <!-- Two-line text -->
-  <div style="
-    position: absolute;
-    bottom: 40px;
-    text-align: center;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-    line-height: 1.4;
-  ">
+  <img src="https://i.ibb.co/zWjn5ykZ/512.png" alt="Black Hat AI Logo" style="width: 100px; height: 100px;" />
+  <div style="position: absolute; bottom: 40px; text-align: center; font-family: 'Helvetica Neue', sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.4;">
     <div style="color: #e5e7eb;">from</div>
-    <div style="
-      background: linear-gradient(90deg, #6366f1, #FF7D1E, #ec4899);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      -webkit-text-fill-color: transparent;
-    ">
-      INDUWARA JAYASINGHE
-    </div>
+    <div style="background: linear-gradient(90deg, #6366f1, #FF7D1E, #ec4899); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">INDUWARA JAYASINGHE</div>
   </div>
 </div>
 
@@ -120,13 +113,29 @@
   <header class="p-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <button id="openSidebar" class="md:hidden text-gray-400 hover:text-white"><i class="fas fa-bars"></i></button>
-      <span class="font-bold text-lg">Black Hat AI</span>
+      <span class="font-bold text-lg">Cllipora</span>
     </div>
-    <div class="flex gap-2">
+    <div class="flex gap-3 items-center">
       <select id="model" class="bg-[#0f1520] border border-gray-700 rounded px-2 py-1 text-sm">
-        <option value="gemini-1.5-flash">Fast</option>
+        <option value="gemini-1.5-flash" selected>Fast</option>
         <option value="gemini-1.5-pro">Pro</option>
       </select>
+      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+        <input id="fastTokens" type="checkbox" class="accent-purple-500" checked>
+        Fast tokens
+      </label>
+      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+        Stream:
+        <select id="streamMode" class="bg-[#0f1520] border border-gray-700 rounded px-1 py-0.5 text-xs">
+          <option value="word" selected>word</option>
+          <option value="sentence">sentence</option>
+          <option value="line">line</option>
+        </select>
+      </label>
+      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+        Speed:
+        <input id="speed" type="range" min="10" max="120" value="45" class="w-24">
+      </label>
       <button id="newChat" class="px-3 py-1 bg-gray-800 rounded-lg hover:bg-gray-700 transition text-sm">New</button>
     </div>
   </header>
@@ -142,9 +151,11 @@
 </div>
 
 <script>
+// Sidebar
 document.getElementById('openSidebar').onclick = () => document.getElementById('sidebar').classList.add('open');
 document.getElementById('closeSidebar').onclick = () => document.getElementById('sidebar').classList.remove('open');
 
+// Local chat history
 let historyData = [];
 let currentSessionId = null;
 let sessions = JSON.parse(localStorage.getItem('bhai_sessions') || '{}');
@@ -166,7 +177,7 @@ function renderHistory(filterText = '') {
       btn.textContent = title;
       btn.onclick = () => { 
         loadSession(id); 
-        history.pushState({}, '', `?session=${id}`); // URL change here
+        history.pushState({}, '', `?session=${id}`);
         if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open'); 
       };
       const delBtn = document.createElement('button');
@@ -206,7 +217,7 @@ function startNewSession() {
   if (historyData.length > 0) saveCurrentSession();
   currentSessionId = Date.now().toString();
   historyData = [];
-  document.getElementById('chatWrapper').innerHTML = '<div id="gradientPlaceholder">How can I help you today?</div>';
+  document.getElementById('chatWrapper').innerHTML = '<div id="gradientPlaceholder">Hello, How can I help you today?</div>';
   history.pushState({}, '', `/new`);
 }
 
@@ -232,7 +243,28 @@ function addMessage(role, text, ts = Date.now(), save = true) {
   header.innerHTML = `<span>${role === 'user' ? 'You' : 'Black Hat AI'}</span> • <span>${formatTime(ts)}</span>`;
   const body = document.createElement('div');
   body.className = 'message-text';
-  body.textContent = text;
+  
+body.innerHTML = marked.parse(text, { breaks: true });
+body.querySelectorAll('pre code').forEach(block => {
+  hljs.highlightElement(block);
+  const btn = document.createElement('button');
+  btn.textContent = 'Copy';
+  btn.className = 'copy-btn';
+  btn.onclick = () => { navigator.clipboard.writeText(block.innerText); btn.textContent = 'Copied!'; setTimeout(()=>btn.textContent='Copy', 2000); };
+  block.parentElement.style.position = 'relative';
+  btn.style.position = 'absolute';
+  btn.style.top = '5px';
+  btn.style.right = '5px';
+  btn.style.background = '#333';
+  btn.style.color = '#fff';
+  btn.style.border = 'none';
+  btn.style.padding = '2px 6px';
+  btn.style.fontSize = '12px';
+  btn.style.borderRadius = '4px';
+  btn.style.cursor = 'pointer';
+  block.parentElement.appendChild(btn);
+});
+
   bubble.append(header, body);
   row.append(role === 'user' ? bubble : avatar, role === 'user' ? avatar : bubble);
   const board = document.getElementById('chatWrapper');
@@ -262,16 +294,185 @@ function addTyping() {
   return { bubble };
 }
 
-async function generateWithAPI(userText) {
-  const model = document.getElementById('model').value;
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c`;
-  const payload = { contents: [{ role: "user", parts: [{ text: userText }] }], generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 8192 } };
-  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-  if (!res.ok) throw new Error(await res.text());
-  const data = await res.json();
-  return data?.candidates?.[0]?.content?.parts?.map(p=>p.text).join('\n') || 'No response.';
+// ===== Helpers for streaming display =====
+function escapeHTML(s) {
+  return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 }
 
+function splitByMode(text, mode) {
+  if (mode === 'sentence') {
+    return text.split(/(?<=[.!?])\s+/);
+  } else if (mode === 'line') {
+    return text.split(/\r?\n/);
+  } else { // word
+    return text.split(/\s+/).filter(Boolean).map((w,i)=> i===0 ? w : ' ' + w);
+  }
+}
+
+async function streamInto(el, fullText, mode, delayMs) {
+  el.innerHTML = ""; // start clean
+  const parts = splitByMode(fullText, mode);
+  for (const part of parts) {
+    
+el.innerHTML = marked.parse(el.innerHTML + part, { breaks: true });
+el.querySelectorAll('pre code').forEach(block => { hljs.highlightElement(block); });
+
+    el.parentElement.parentElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    await new Promise(r => setTimeout(r, delayMs));
+  }
+}
+
+// ===== FAST API client: races multiple keys in parallel =====
+const apiKeys = [
+  "AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c", // original
+  "AIzaSyBmg1mor0PVaKee36pqlXq3MXo0kqIHZ2g",
+  "AIzaSyBMVdmVzAgPPGCBsACkfFWUFFqoNso9q6Q",
+  "AIzaSyDvOr2CAan9bEiD3_sTmtPhl0CV6UUO0mg",
+  "AIzaSyCQ9MggdAPn-6K_GeDL",
+  "AIzaSyCi6DyTo2pxX6sJlyjU8_q53aeAE1yQGTY",
+  "AIzaSyDbekJHQJeQ-QkcUY2AeeEXRilLbYVkHig",
+  "AIzaSyAVgne2RjnArti2EtkrgmI2zxgvFPXJgT0",
+  "AIzaSyBM5erdxS-Owin3qRtRvreN9Ba6jcj10JY",
+  "AIzaSyD9qLcxlh8CEUY_UziMzR7bjJBCp2Q--9M",
+  "AIzaSyDDowfBlGp-ikULmLtFPEXx4EP45PtHWGU",
+  "AIzaSyDNgx_UOiLWAHqVolHF_a9miF-wpk_jBpc",
+  "AIzaSyBDeR7KqE7x5Tf1pnwIyh5xZNktcn2-p4U",
+  "AIzaSyC04xISfrK5F59q8m--imtwhhUa8dtQUoM",
+  "AIzaSyD0BWWOrazTYhELNgeKLl5BQCG48HDWj2w",
+  "AIzaSyDM-HevofoiCnwmfHp3CXOLQzvzLt-Bc3o",
+  "AIzaSyCW2Zx5im1hLxjHTEz5OQttHVck1ipjodI"
+,
+  "AIzaSyC_iidLA0605e9kXRzcJvD15EDtdjIUnWo",
+  "AIzaSyCTpGxuxmwAIu5i0uGFBsDGlAyUe5EVXQ0",
+  "AIzaSyBfoVEM51ky2ElRJTRLOUVI-O1wgyaEYdk",
+  "AIzaSyDEVsjwXOETaT5ikXB0lKiVSBllrZzpiXU",
+  "AIzaSyCkaj69nQdMqfYrnwwJgkC9qriQVbf_m0I",
+  "AIzaSyB1Bx0UXDkOJi81K8uFSMjX7BoA9iBpAMo",
+  "AIzaSyCJziWBfoqKzHYXA5S-6g9vgtVkD1SDK20",
+  "AIzaSyBAwS57IWE8KRB4VGGkhP9gu_hbzvQKP5s",
+  "AIzaSyDlr_wywcg2opeJBjymfZcBQrMwNlBUX0A",
+  "AIzaSyB9pKDzXhL_311E6gygMoJ7L1P88hjzMzQ",
+  "AIzaSyDI4lb_Rn1Xopd_M8WXQyf54Oe1AbWucy4",
+  "AIzaSyAPI9NnnANEJnsPMWl5lxp6ZxNRc6JXn7w",
+  "AIzaSyDNCZpIo02WyRS-OZlRM47dZ24sLldlug8",
+  "AIzaSyBWplv8qDu4XU4qdvKsfcrzmMLfJ0cZVa0",
+  "AIzaSyDl4LIhawmXdOCuzu837O5AeozXNSiP4iQ",
+  "AIzaSyBfpQ6bPkJJGhTcEU_IvfFiCBRlBYhKiYk",
+  "AIzaSyAj0lUlLNnnO-2hooKxdNp0VbRxrzelSO8",
+  "AIzaSyAfLFCenAnScKUlajqEyHMVV8UhUEARyBU",
+  "AIzaSyDhveL8hMhwf_DqBmcTMO6Y4xaR-zpt19k",
+  "AIzaSyA6MT66C_qVa4GyWzdBzGySIHEL5tLETUw",
+  "AIzaSyCj8imUZl4a-GE1nohHqLP7b8-hHBTHO6g",
+  "AIzaSyASrn2RbhETocRBCrD_h4KuVpf-OjO5QYw",
+  "AIzaSyD78pChBbUV3gdc3k0CaIvMI2SJIjDjnqI",
+  "AIzaSyDMGQ-7cId2mMp0U2xG-svxlL-gRYm-Ju4",
+  "AIzaSyDFv_GLlWzrEmCBR-EJJCAlHVmczn98N1c",
+  "AIzaSyA7kzKcleHkrWXn0sXAG_rYVHjh5fJJGPI",
+  "AIzaSyCumQKgb6q6Tx9y-jwVgeHaF4tc6DmOK4g",
+  "AIzaSyBXNFNJgKMsa2yzMz7wOCz1_Uh0Kr1ru1k",
+  "AIzaSyAJQpPBXDwNKXQN4NhrVxAJuig2hPD-VjY",
+  "AIzaSyCIXYVL4UNMIG7VY-FuMLNeo4HWLD3sCag",
+  "AIzaSyC4OE_HK7ON8HSxCqT7LZQCucY-DUtOdQs",
+  "AIzaSyAdV_ehjJWhyf3f_1YI_lv_avcCjbajhDU",
+  "AIzaSyBEUMYKmZOrp5cuPQlX-xGt2HYaQUTt_H4",
+  "AIzaSyCTzFyN9oNQ6ohuDI-ENDCrTQe_IJsQ7ME",
+  "AIzaSyCbYHR4uXelirXz4sdxT9jau0foh4DJgFs",
+  "AIzaSyAhdtkkApmpct13uSGrN9sBfboBG_cpdrE",
+  "AIzaSyBr63BZsCC3wynmAZwyOkueGqyNBO270qA",
+  "AIzaSyAzP30kfD5S8CRTrQG6Czyhqj6nIx4fsRU",
+  "AIzaSyA7K71mXYig0dNUW5USAvxuAv-fj2LhQAU",
+  "AIzaSyC1DbVl1DDo35pgQqG8V-jptnTTp48D85U",
+  "AIzaSyBiDnZBqoNzGx048eSU66xUZKVy7chI2t4",
+  "AIzaSyDWV3YhipQsoBBGoWcFRZj0QHPu82oVSeo",
+  "AIzaSyCHWXZxIpM0LpvXnqFxfYsOgthGunc6Gak",
+  "AIzaSyCdrnAYqVjIfweWZj1bgAGLlswitdLR1nQ",
+  "AIzaSyCU_a3Vzkh3FsD-6sbwN_NPC--xvBsXYmE",
+  "AIzaSyDHKAwOp5EFySahUqgsuFg3OqSXAOqHEp8",
+  "AIzaSyBeMNrkI5tIQeMLIysc2_iFNY492M5NY74"];
+
+let startOffset = 0; // rotates which keys are first in the race
+
+function maskKey(k) { return k ? (k.slice(0,6) + "..." + k.slice(-4)) : ""; }
+
+function chunk(arr, size) {
+  const out = [];
+  for (let i=0; i<arr.length; i += size) out.push(arr.slice(i, i+size));
+  return out;
+}
+
+function rotate(arr, n) {
+  const m = ((n % arr.length) + arr.length) % arr.length;
+  return arr.slice(m).concat(arr.slice(0, m));
+}
+
+function startRequest(key, model, payload, timeoutMs=10000) {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), timeoutMs);
+  const promise = fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${key}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    signal: controller.signal
+  }).then(async (res) => {
+    const text = await res.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch {}
+    if (!res.ok) {
+      const msg = data?.error?.message || text || `HTTP ${res.status}`;
+      throw new Error(`(${res.status}) ${msg}`);
+    }
+    const out = data?.candidates?.[0]?.content?.parts?.map(p => p.text).join('\\n');
+    if (!out || !out.trim()) throw new Error("Empty response");
+    return { out, key };
+  });
+  promise.finally(() => clearTimeout(id));
+  return { promise, controller, key };
+}
+
+async function raceBatch(keys, model, payload, timeoutMs) {
+  const runners = keys.map(k => startRequest(k, model, payload, timeoutMs));
+  try {
+    const result = await Promise.any(runners.map(r => r.promise));
+    // Abort the rest
+    runners.forEach(r => { if (r.key !== result.key) r.controller.abort(); });
+    return result;
+  } catch (e) {
+    // All failed in this batch
+    runners.forEach(r => r.controller.abort());
+    throw e;
+  }
+}
+
+async function generateAndStream(userText, targetEl) {
+  const model = document.getElementById('model').value;
+  const fastTokens = document.getElementById('fastTokens').checked;
+  const streamMode = document.getElementById('streamMode').value;
+  const speed = Number(document.getElementById('speed').value); // ms per chunk
+
+  const payload = {
+    contents: [{ role: "user", parts: [{ text: userText }]}],
+    generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: fastTokens ? 1024 : 2048 }
+  };
+
+  const rotated = rotate(apiKeys, startOffset);
+  startOffset = (startOffset + 1) % apiKeys.length;
+
+  const batches = chunk(rotated, 3);
+  let lastErr = null;
+  for (const batch of batches) {
+    try {
+      const { out, key } = await raceBatch(batch, model, payload, 10000);
+      console.info("Served by key", maskKey(key));
+      await streamInto(targetEl, out, streamMode, speed);
+      return out;
+    } catch (err) {
+      lastErr = err;
+    }
+  }
+  throw new Error(lastErr?.message || "All keys failed.");
+}
+
+// ===== UI handlers =====
 async function handleSend() {
   const input = document.getElementById('input');
   const text = input.value.trim();
@@ -288,18 +489,20 @@ async function handleSend() {
   input.style.height = 'auto';
   const typing = addTyping();
   try {
-    const reply = await generateWithAPI(text);
-    typing.bubble.innerHTML = `<div class="msg-header"><span>Black Hat AI</span> • <span>${formatTime(Date.now())}</span></div><div class="message-text">${reply}</div>`;
-    historyData.push({ role: 'model', text: reply, ts: Date.now() });
+    // Replace 'Thinking…' with live streaming area
+    typing.bubble.innerHTML = `<div class="msg-header"><span>Black Hat AI</span> • <span>${formatTime(Date.now())}</span></div><div class="message-text" id="liveText"></div>`;
+    const liveEl = typing.bubble.querySelector('#liveText');
+    const full = await generateAndStream(text, liveEl);
+    historyData.push({ role: 'model', text: full, ts: Date.now() });
     saveCurrentSession();
   } catch (err) {
-    typing.bubble.innerHTML = `<span class="text-red-400">Error:</span> ${err.message}`;
+    typing.bubble.innerHTML = `<div class="msg-header"><span>Black Hat AI</span> • <span>${formatTime(Date.now())}</span></div><div class="message-text"><span class="text-red-400">Error:</span> ${escapeHTML(err.message)}</div>`;
   }
 }
 
 document.getElementById('send').onclick = handleSend;
 document.getElementById('newChat').onclick = startNewSession;
-document.getElementById('clearHistoryDesktop').onclick = () => { sessions={}; localStorage.removeItem('bhai_sessions'); renderHistory(); startNewSession(); };
+document.getElementById('clearHistoryDesktop').onclick = () => { sessions = {}; localStorage.removeItem('bhai_sessions'); renderHistory(); startNewSession(); };
 document.getElementById('input').addEventListener('keydown', e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); handleSend(); }});
 document.getElementById('input').addEventListener('input', e => {
   e.target.style.height = 'auto';
@@ -309,27 +512,23 @@ document.getElementById('input').addEventListener('input', e => {
 
 renderHistory();
 startNewSession();
-
-
-
-
-
 </script>
-
 
 <script>
 // Splash screen timeout
 window.addEventListener('load', () => {
   setTimeout(() => {
     const splash = document.getElementById('splashScreen');
+    if (!splash) return;
     splash.style.opacity = '0';
     setTimeout(() => splash.remove(), 500);
-  }, 3000);
+  }, 900);
 });
 </script>
 
-
 </body>
 </html>
+
+
 
 
