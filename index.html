@@ -3,7 +3,18 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Black Hat AI — Chat</title>
+<title>Cllipora AI</title>
+
+<!-- Link Preview Metadata -->
+<meta property="og:title" content="Cllipora AI" />
+<meta property="og:description" content="Chat with Black Hat AI — Fast, sleek, and private AI assistant." />
+<meta property="og:image" content="https://i.ibb.co/zWjn5ykZ/512.png" />
+<meta property="og:url" content="https://cllipora.netlify.app" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Cllipora AI" />
+<meta name="twitter:description" content="Chat with Black Hat AI — Fast, sleek, and private AI assistant." />
+<meta name="twitter:image" content="https://i.ibb.co/zWjn5ykZ/512.png" />
+
 <link rel="icon" href="https://i.ibb.co/zWjn5ykZ/512.png" type="image/png">
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -16,83 +27,80 @@
     --accent: #7c3aed;
     --accent2: #22d3ee;
   }
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) var(--panel);
-  }
+  * { scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel); }
   *::-webkit-scrollbar { width: 8px; height: 8px; }
   *::-webkit-scrollbar-track { background: var(--panel); }
   *::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
   *::-webkit-scrollbar-thumb:hover { background: var(--accent2); }
-
   @keyframes spin { to { transform: rotate(360deg); } }
   .spinner { border-top-color: var(--accent); animation: spin 1s linear infinite; }
-
   .message-text { white-space: pre-wrap; word-wrap: break-word; line-height: 1.45; }
-  .msg-bubble {
-    max-width: 680px;
-    border: 1px solid #1f2937;
-    border-radius: 0.75rem;
-    padding: 0.75rem;
-    background-image: linear-gradient(to bottom, #0f1520, #0c1320);
-  }
-  .msg-bubble.user {
-    background-image: linear-gradient(to bottom right, #7c3aed, #a78bfa);
-    color: white; border-top-right-radius: 0;
-  }
+  .msg-bubble { max-width: 680px; border: 1px solid #1f2937; border-radius: 0.75rem; padding: 0.75rem; background-image: linear-gradient(to bottom, #0f1520, #0c1320); }
+  .msg-bubble.user { background-image: linear-gradient(to bottom right, #7c3aed, #a78bfa); color: white; border-top-right-radius: 0; }
   .msg-bubble.ai { color: #e5e7eb; border-top-left-radius: 0; }
   .msg-header { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.25rem; display: flex; align-items: baseline; gap: 0.5rem; }
-
-  #searchHistory {
-    background-color: #0a1220; border: 1px solid #1f2937;
-    padding: 0.4rem 0.5rem; border-radius: 0.5rem;
-    width: 100%; color: white;
-  }
+  #searchHistory { background-color: #0a1220; border: 1px solid #1f2937; padding: 0.4rem 0.5rem; border-radius: 0.5rem; width: 100%; color: white; }
   #searchHistory:focus { outline: none; border-color: var(--accent); }
-
   body { height: 100vh; display: flex; overflow: hidden; }
-  aside {
-    flex-shrink: 0; width: 16rem; background: var(--panel);
-    border-right: 1px solid #1f2937; display: flex; flex-direction: column;
-  }
+  aside { flex-shrink: 0; width: 16rem; background: var(--panel); border-right: 1px solid #1f2937; display: flex; flex-direction: column; }
   header { flex-shrink: 0; background: var(--bg); border-bottom: 1px solid #1f2937; z-index: 20; }
   footer { flex-shrink: 0; background: var(--bg); border-top: 1px solid #1f2937; }
   #chatWrapper { flex: 1; overflow-y: auto; padding: 1rem; position: relative; }
   #input { max-height: calc(1.5em * 9); overflow-y: auto; }
-
-  /* Gemini-style placeholder */
-  #gradientPlaceholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-    font-weight: 600;
-    background: linear-gradient(to right, var(--accent), var(--accent2));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-align: center;
-    pointer-events: none;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    font-family: 'Segoe UI', sans-serif;
-    white-space: nowrap;
-  }
-  #gradientPlaceholder.slide-up {
-    transform: translate(-50%, -80%) scale(0.85);
-    opacity: 0;
-  }
-
+  #gradientPlaceholder { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: clamp(1.5rem, 5vw, 2.5rem); font-weight: 600; background: linear-gradient(to right, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; pointer-events: none; transition: transform 0.5s ease, opacity 0.5s ease; font-family: 'Segoe UI', sans-serif; white-space: nowrap; }
+  #gradientPlaceholder.slide-up { transform: translate(-50%, -80%) scale(0.85); opacity: 0; }
   @media (max-width: 768px) {
-    aside {
-      position: fixed; left: -100%; top: 0; bottom: 0;
-      z-index: 50; transition: left 0.3s ease;
-    }
+    aside { position: fixed; left: -100%; top: 0; bottom: 0; z-index: 50; transition: left 0.3s ease; }
     aside.open { left: 0; }
     #gradientPlaceholder { font-size: clamp(1.2rem, 6vw, 2rem); }
   }
 </style>
 </head>
 <body class="bg-[#0b0f14] text-gray-200">
+
+<!-- Splash Screen -->
+<div id="splashScreen" style="
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: linear-gradient(#000000);
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s ease;
+">
+  <!-- Logo -->
+  <img src="https://i.ibb.co/zWjn5ykZ/512.png"
+       alt="Black Hat AI Logo"
+       style="width: 100px; height: 100px;" />
+
+  <!-- Two-line text -->
+  <div style="
+    position: absolute;
+    bottom: 40px;
+    text-align: center;
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+  ">
+    <div style="color: #e5e7eb;">from</div>
+    <div style="
+      background: linear-gradient(90deg, #6366f1, #FF7D1E, #ec4899);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      -webkit-text-fill-color: transparent;
+    ">
+      INDUWARA JAYASINGHE
+    </div>
+  </div>
+</div>
+
 <aside id="sidebar">
   <div class="flex items-center gap-3 p-4 border-b border-gray-800">
     <img src="https://i.ibb.co/zWjn5ykZ/512.png" alt="Logo" class="w-8 h-8 rounded">
@@ -137,7 +145,7 @@
 document.getElementById('openSidebar').onclick = () => document.getElementById('sidebar').classList.add('open');
 document.getElementById('closeSidebar').onclick = () => document.getElementById('sidebar').classList.remove('open');
 
-let history = [];
+let historyData = [];
 let currentSessionId = null;
 let sessions = JSON.parse(localStorage.getItem('bhai_sessions') || '{}');
 
@@ -156,7 +164,11 @@ function renderHistory(filterText = '') {
       const btn = document.createElement('button');
       btn.className = 'flex-1 text-left p-2 text-sm truncate';
       btn.textContent = `${when} — ${title}`;
-      btn.onclick = () => { loadSession(id); if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open'); };
+      btn.onclick = () => { 
+        loadSession(id); 
+        history.pushState({}, '', `?session=${id}`); // URL change here
+        if(window.innerWidth < 768) document.getElementById('sidebar').classList.remove('open'); 
+      };
       const delBtn = document.createElement('button');
       delBtn.className = 'text-red-500 hover:text-red-700 px-2 py-1';
       delBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
@@ -165,7 +177,7 @@ function renderHistory(filterText = '') {
         if(confirm('Delete this chat?')) {
           delete sessions[id];
           localStorage.setItem('bhai_sessions', JSON.stringify(sessions));
-          if(currentSessionId === id) { currentSessionId = null; history = []; document.getElementById('chatWrapper').innerHTML = '<div id="gradientPlaceholder">How can I help you today?</div>'; }
+          if(currentSessionId === id) { currentSessionId = null; historyData = []; document.getElementById('chatWrapper').innerHTML = '<div id="gradientPlaceholder">How can I help you today?</div>'; }
           renderHistory(filterText);
         }
       };
@@ -178,29 +190,30 @@ document.getElementById('searchHistory').addEventListener('input', e => renderHi
 
 function saveCurrentSession() {
   if (!currentSessionId) return;
-  sessions[currentSessionId] = { ts: Date.now(), messages: history };
+  sessions[currentSessionId] = { ts: Date.now(), messages: historyData };
   localStorage.setItem('bhai_sessions', JSON.stringify(sessions));
   renderHistory();
 }
 
 function loadSession(id) {
   currentSessionId = id;
-  history = sessions[id].messages;
+  historyData = sessions[id].messages;
   document.getElementById('chatWrapper').innerHTML = '';
-  history.forEach(m => addMessage(m.role, m.text, m.ts, false));
+  historyData.forEach(m => addMessage(m.role, m.text, m.ts, false));
 }
 
 function startNewSession() {
-  if (history.length > 0) saveCurrentSession();
+  if (historyData.length > 0) saveCurrentSession();
   currentSessionId = Date.now().toString();
-  history = [];
+  historyData = [];
   document.getElementById('chatWrapper').innerHTML = '<div id="gradientPlaceholder">How can I help you today?</div>';
+  history.pushState({}, '', `/new`);
 }
 
 function formatTime(ts){ return new Date(ts).toLocaleTimeString(); }
 
 function addMessage(role, text, ts = Date.now(), save = true) {
-  if (save) history.push({ role, text, ts });
+  if (save) historyData.push({ role, text, ts });
   const row = document.createElement('div');
   row.className = 'flex gap-3 my-2 items-start max-w-full ' + (role === 'user' ? 'justify-end' : 'justify-start');
   const avatar = document.createElement('div');
@@ -277,7 +290,7 @@ async function handleSend() {
   try {
     const reply = await generateWithAPI(text);
     typing.bubble.innerHTML = `<div class="msg-header"><span>Black Hat AI</span> • <span>${formatTime(Date.now())}</span></div><div class="message-text">${reply}</div>`;
-    history.push({ role: 'model', text: reply, ts: Date.now() });
+    historyData.push({ role: 'model', text: reply, ts: Date.now() });
     saveCurrentSession();
   } catch (err) {
     typing.bubble.innerHTML = `<span class="text-red-400">Error:</span> ${err.message}`;
@@ -296,6 +309,27 @@ document.getElementById('input').addEventListener('input', e => {
 
 renderHistory();
 startNewSession();
+
+
+
+
+
 </script>
+
+
+<script>
+// Splash screen timeout
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    const splash = document.getElementById('splashScreen');
+    splash.style.opacity = '0';
+    setTimeout(() => splash.remove(), 500);
+  }, 3000);
+});
+</script>
+
+
 </body>
 </html>
+
+
