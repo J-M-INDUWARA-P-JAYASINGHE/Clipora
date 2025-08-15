@@ -265,7 +265,7 @@ function addTyping() {
 async function generateWithAPI(userText) {
   const model = document.getElementById('model').value;
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c`;
-  const payload = { contents: [{ role: "user", parts: [{ text: userText }] }], generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 1024 } };
+  const payload = { contents: [{ role: "user", parts: [{ text: userText }] }], generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 8192 } };
   const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
   if (!res.ok) throw new Error(await res.text());
   const data = await res.json();
