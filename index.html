@@ -120,7 +120,7 @@
   <header class="p-4 flex items-center justify-between">
     <div class="flex items-center gap-3">
       <button id="openSidebar" class="md:hidden text-gray-400 hover:text-white"><i class="fas fa-bars"></i></button>
-      <span class="font-bold text-lg">Cllipora -9 Mini</span>
+      <span class="font-bold text-lg">Black Hat AI</span>
     </div>
     <div class="flex gap-2">
       <select id="model" class="bg-[#0f1520] border border-gray-700 rounded px-2 py-1 text-sm">
@@ -262,112 +262,15 @@ function addTyping() {
   return { bubble };
 }
 
-// --- API key rotation ---
-const apiKeys = [
-  "AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c",
-  "AIzaSyCGd40dIEGMEiyL5-iCu0zFkR3BzWhMZto",
-  "AIzaSyDSHuOIDxGODYho5P6ILvqRq1oStBx8_Qw",
-  "AIzaSyBFvxNI-E7hWFgF2pctJXFP1UyUsN2hams",
-  "AIzaSyAU9eMrODzNhd4s_aY33XVw2PsnyUZw5Bk",
-  "AIzaSyBmg1mor0PVaKee36pqlXq3MXo0kqIHZ2g",
-  "AIzaSyBMVdmVzAgPPGCBsACkfFWUFFqoNso9q6Q",
-  "AIzaSyDvOr2CAan9bEiD3_sTmtPhl0CV6UUO0mg",
-  "AIzaSyCQ9MggdAPn-6K_GeDLvFqgYYDzLIUlIa4",
-  "AIzaSyADvv7tsbWHMX4xeLQCh7vvJsZ0B5WfK5w",
-  "AIzaSyB36d6XKwm996_1xbhiNyXPvAGF9VvJwjk",
-  "AIzaSyCuH3TtRgtpCNZnidr4MIWITKPxhrabpeM",
-  "AIzaSyD4MPm38r_EBpJe0_RPaqJOPmfei1gxqZA",
-  "AIzaSyBpzTMXvJsMKo59YOKy_gJ0jgXQLty4CIU",
-  "AIzaSyBFmRwSK8fQ9eefVdFS_cI3XjXEwiDztos",
-  "AIzaSyAfuioTozdc8MfJMe4F6KjaHHsD_08IHDE",
-  "AIzaSyAG0PRW--fbwUpBviIl6HAxU1b086SnDGk",
-  "AIzaSyBGd3PZhNE-P7WSzVsFWCc03h_HExQ1ZBQ",
-  "AIzaSyDkNHS_07SBlcmDzObug14SVkvP2C7VVhk",
-  "AIzaSyDX_6tkK15GXgqCixbNkukr7nSnGu5hfww",
-  "AIzaSyDCDlDjav10IwXuksYPBy0tuorrxpePiHA",
-  "AIzaSyAMrTonQYFKlTgKhk_mx6EysNF4-wfUyDE",
-  "AIzaSyDjP45_wLXHwF6HNjAwYIeAi8yAkUbL1hM",
-  "AIzaSyBioSbgbsUsrfzaPrlAMROn15IzUuwTFmU"
-];
-let currentKeyIndex = 0;
-function rotateKey() { currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length; showKeyChangeMessage(); }
-function activeKey() { return apiKeys[currentKeyIndex]; }
-
-
-function showKeyChangeMessage() {
-  const notice = document.createElement('div');
-  notice.textContent = "Model Changed — Response will be given from another Cllipora model...";
-  notice.style.position = 'fixed';
-  notice.style.bottom = '20px';
-  notice.style.left = '50%';
-  notice.style.transform = 'translateX(-50%)';
-  notice.style.background = 'rgba(255, 193, 7, 0.95)';
-  notice.style.color = '#000';
-  notice.style.padding = '10px 20px';
-  notice.style.borderRadius = '6px';
-  notice.style.fontSize = '14px';
-  notice.style.fontWeight = 'bold';
-  notice.style.zIndex = '9999';
-  document.body.appendChild(notice);
-  setTimeout(() => {
-    notice.remove();
-  }, 3000);
-}
-
-// --- end rotation ---
-
 async function generateWithAPI(userText) {
   const model = document.getElementById('model').value;
-
-  // We'll attempt each key at most once
-  let attempts = 0;
-  let lastError = null;
-
-  while (attempts < apiKeys.length) {
-    const apiKey = activeKey();
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const payload = {
-      contents: [{ role: "user", parts: [{ text: userText }] }],
-      generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 8192 }
-    };
-
-    try {
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!res.ok) {
-        const txt = await res.text();
-        // Detect quota/permission/auth issues -> rotate key
-        const rotate =
-          res.status === 429 ||
-          res.status === 403 ||
-          /quota|exceed|exceeded|RESOURCE_EXHAUSTED|PERMISSION|API key|invalid|project/i.test(txt);
-
-        if (rotate) {
-          rotateKey();
-          attempts++;
-          continue;
-        }
-        // Non-rotatable error: throw
-        throw new Error(txt);
-      }
-
-      const data = await res.json();
-      const out = (data?.candidates?.[0]?.content?.parts?.map(p => p.text).join("\n")) || "No response.";
-      return out;
-    } catch (err) {
-      lastError = err;
-      rotateKey();
-      attempts++;
-    }
-  }
-
-  throw lastError || new Error("All API keys failed");
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c`;
+  const payload = { contents: [{ role: "user", parts: [{ text: userText }] }], generationConfig: { temperature: 0.7, topP: 0.95, maxOutputTokens: 8192 } };
+  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  if (!res.ok) throw new Error(await res.text());
+  const data = await res.json();
+  return data?.candidates?.[0]?.content?.parts?.map(p=>p.text).join('\n') || 'No response.';
 }
-
 
 async function handleSend() {
   const input = document.getElementById('input');
@@ -425,21 +328,6 @@ window.addEventListener('load', () => {
 });
 </script>
 
-
-
-<script>
-// Detect common devtools/view-source shortcuts and reload
-document.addEventListener('keydown', function(e) {
-  if (
-    e.key === 'F12' ||
-    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
-    (e.ctrlKey && e.key === 'U')
-  ) {
-    e.preventDefault();
-    location.reload();
-  }
-});
-</script>
 
 </body>
 </html>
