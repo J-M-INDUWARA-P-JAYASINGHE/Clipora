@@ -163,7 +163,7 @@ function renderHistory(filterText = '') {
       container.className = 'flex justify-between items-center w-full rounded hover:bg-gray-700';
       const btn = document.createElement('button');
       btn.className = 'flex-1 text-left p-2 text-sm truncate';
-      btn.textContent = `${when} — ${title}`;
+      btn.textContent = title;
       btn.onclick = () => { 
         loadSession(id); 
         history.pushState({}, '', `?session=${id}`); // URL change here
@@ -331,5 +331,6 @@ window.addEventListener('load', () => {
 
 </body>
 </html>
+
 
 
