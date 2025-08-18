@@ -1,20 +1,19 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>Cllipora AI</title>
-
 <!-- Social -->
-<meta property="og:title" content="Cllipora AI" />
-<meta property="og:description" content="Chat with Black Hat AI — ultra-fast with live streaming replies." />
-<meta property="og:image" content="https://i.ibb.co/zWjn5ykZ/512.png" />
-<meta property="og:url" content="https://cllipora.netlify.app" />
-<meta name="twitter:card" content="summary_large_image" />
-
-<link rel="icon" href="https://i.ibb.co/zWjn5ykZ/512.png" type="image/png">
+<meta content="Cllipora AI" property="og:title"/>
+<meta content="Chat with Black Hat AI — ultra-fast with live streaming replies." property="og:description"/>
+<meta content="https://i.ibb.co/zWjn5ykZ/512.png" property="og:image"/>
+<meta content="https://cllipora.netlify.app" property="og:url"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<link href="https://i.ibb.co/zWjn5ykZ/512.png" rel="icon" type="image/png"/>
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
 <style>
   :root {
     --bg: #0b0f14;
@@ -63,15 +62,12 @@
 
   
 </style>
-
 <!-- Markdown rendering -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-</head>
+</link></head>
 <body class="bg-[#0b0f14] text-gray-200">
-
 <!-- Splash Screen -->
 <div id="splashScreen" style="
   position: fixed;
@@ -87,69 +83,64 @@
   justify-content: center;
   transition: opacity 0.5s ease;
 ">
-  <img src="https://i.ibb.co/zWjn5ykZ/512.png" alt="Black Hat AI Logo" style="width: 100px; height: 100px;" />
-  <div style="position: absolute; bottom: 40px; text-align: center; font-family: 'Helvetica Neue', sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.4;">
-    <div style="color: #e5e7eb;">from</div>
-    <div style="background: linear-gradient(90deg, #6366f1, #FF7D1E, #ec4899); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">INDUWARA JAYASINGHE</div>
-  </div>
+<img alt="Black Hat AI Logo" src="https://i.ibb.co/zWjn5ykZ/512.png" style="width: 100px; height: 100px;"/>
+<div style="position: absolute; bottom: 40px; text-align: center; font-family: 'Helvetica Neue', sans-serif; font-size: 1rem; font-weight: 600; line-height: 1.4;">
+<div style="color: #e5e7eb;">from</div>
+<div style="background: linear-gradient(90deg, #6366f1, #FF7D1E, #ec4899); background-clip: text; -webkit-background-clip: text; color: transparent; -webkit-text-fill-color: transparent;">INDUWARA JAYASINGHE</div>
 </div>
-
+</div>
 <aside id="sidebar">
-  <div class="flex items-center gap-3 p-4 border-b border-gray-800">
-    <img src="https://i.ibb.co/zWjn5ykZ/512.png" alt="Logo" class="w-8 h-8 rounded">
-    <span class="font-bold text-lg">Black Hat AI</span>
-    <button id="closeSidebar" class="ml-auto md:hidden text-gray-400 hover:text-white"><i class="fas fa-times"></i></button>
-  </div>
-  <div class="p-3 border-b border-gray-800">
-    <input type="text" id="searchHistory" placeholder="Search chats..." />
-  </div>
-  <div id="historyList" class="flex-1 overflow-y-auto p-2 space-y-2 text-sm"></div>
-  <div class="p-3 border-t border-gray-800 hidden md:block">
-    <button id="clearHistoryDesktop" class="w-full bg-red-600 rounded-lg py-2 hover:bg-red-700 transition">Clear History</button>
-  </div>
+<div class="flex items-center gap-3 p-4 border-b border-gray-800">
+<img alt="Logo" class="w-8 h-8 rounded" src="https://i.ibb.co/zWjn5ykZ/512.png"/>
+<span class="font-bold text-lg">Black Hat AI</span>
+<button class="ml-auto md:hidden text-gray-400 hover:text-white" id="closeSidebar"><i class="fas fa-times"></i></button>
+</div>
+<div class="p-3 border-b border-gray-800">
+<input id="searchHistory" placeholder="Search chats..." type="text"/>
+</div>
+<div class="flex-1 overflow-y-auto p-2 space-y-2 text-sm" id="historyList"></div>
+<div class="p-3 border-t border-gray-800 hidden md:block">
+<button class="w-full bg-red-600 rounded-lg py-2 hover:bg-red-700 transition" id="clearHistoryDesktop">Clear History</button>
+</div>
 </aside>
-
 <div class="flex flex-col flex-1 min-w-0">
-  <header class="p-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <button id="openSidebar" class="md:hidden text-gray-400 hover:text-white"><i class="fas fa-bars"></i></button>
-      <span class="font-bold text-lg">Cllipora</span>
-    </div>
-    <div class="flex gap-3 items-center">
-      <select id="model" class="bg-[#0f1520] border border-gray-700 rounded px-2 py-1 text-sm">
-        <option value="gemini-1.5-flash" selected>Fast</option>
-        <option value="gemini-1.5-pro">Pro</option>
-      </select>
-      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
-        <input id="fastTokens" type="checkbox" class="accent-purple-500" checked>
+<header class="p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="md:hidden text-gray-400 hover:text-white" id="openSidebar"><i class="fas fa-bars"></i></button>
+<span class="font-bold text-lg">Cllipora</span>
+</div>
+<div class="flex gap-3 items-center">
+<select class="bg-[#0f1520] border border-gray-700 rounded px-2 py-1 text-sm" id="model">
+<option selected="" value="gemini-1.5-flash">Fast</option>
+<option value="gemini-1.5-pro">Pro</option>
+</select>
+<label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+<input checked="" class="accent-purple-500" id="fastTokens" type="checkbox"/>
         Fast tokens
       </label>
-      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+<label class="flex items-center gap-1 text-xs text-gray-400 select-none">
         Stream:
-        <select id="streamMode" class="bg-[#0f1520] border border-gray-700 rounded px-1 py-0.5 text-xs">
-          <option value="word" selected>word</option>
-          <option value="sentence">sentence</option>
-          <option value="line">line</option>
-        </select>
-      </label>
-      <label class="flex items-center gap-1 text-xs text-gray-400 select-none">
+        <select class="bg-[#0f1520] border border-gray-700 rounded px-1 py-0.5 text-xs" id="streamMode">
+<option selected="" value="word">word</option>
+<option value="sentence">sentence</option>
+<option value="line">line</option>
+</select>
+</label>
+<label class="flex items-center gap-1 text-xs text-gray-400 select-none">
         Speed:
-        <input id="speed" type="range" min="10" max="120" value="45" class="w-24">
-      </label>
-      <button id="newChat" class="px-3 py-1 bg-gray-800 rounded-lg hover:bg-gray-700 transition text-sm">New</button>
-    </div>
-  </header>
-
-  <div id="chatWrapper">
-    <div id="gradientPlaceholder">How can I help you today?</div>
-  </div>
-
-  <footer class="p-3 flex gap-2">
-    <textarea id="input" rows="1" placeholder="Ask anything…" class="flex-1 bg-[#0a1220] border border-gray-800 p-2 rounded-lg resize-none text-sm focus:outline-none focus:ring-2 focus:ring-[#7c3aed]"></textarea>
-    <button id="send" class="px-4 py-2 bg-gradient-to-tr from-[#7c3aed] to-[#22d3ee] rounded-lg font-bold hover:from-[#6b21a8] hover:to-[#0ea5e9] transition text-sm">Send</button>
-  </footer>
+        <input class="w-24" id="speed" max="120" min="10" type="range" value="45"/>
+</label>
+<button class="px-3 py-1 bg-gray-800 rounded-lg hover:bg-gray-700 transition text-sm" id="newChat">New</button>
 </div>
-
+</header>
+<div id="chatWrapper">
+<div id="gradientPlaceholder">How can I help you today?</div>
+</div>
+<footer class="p-3 flex gap-2">
+<textarea class="flex-1 bg-[#0a1220] border border-gray-800 p-2 rounded-lg resize-none text-sm focus:outline-none focus:ring-2 focus:ring-[#7c3aed]" id="input" placeholder="Ask anything…" rows="1"></textarea>
+<button class="px-4 py-2 bg-gradient-to-tr from-[#7c3aed] to-[#22d3ee] rounded-lg font-bold hover:from-[#6b21a8] hover:to-[#0ea5e9] transition text-sm" id="send">Send</button>
+</footer>
+</div>
 <script>
 // Sidebar
 document.getElementById('openSidebar').onclick = () => document.getElementById('sidebar').classList.add('open');
@@ -324,7 +315,7 @@ el.querySelectorAll('pre code').forEach(block => { hljs.highlightElement(block);
 
 // ===== FAST API client: races multiple keys in parallel =====
 const apiKeys = [
-  "AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c", // original
+  "AIzaSyAd0wLes7N-wifp5N54NEDsUb7Kz_uss8c",
   "AIzaSyBmg1mor0PVaKee36pqlXq3MXo0kqIHZ2g",
   "AIzaSyBMVdmVzAgPPGCBsACkfFWUFFqoNso9q6Q",
   "AIzaSyDvOr2CAan9bEiD3_sTmtPhl0CV6UUO0mg",
@@ -340,8 +331,7 @@ const apiKeys = [
   "AIzaSyC04xISfrK5F59q8m--imtwhhUa8dtQUoM",
   "AIzaSyD0BWWOrazTYhELNgeKLl5BQCG48HDWj2w",
   "AIzaSyDM-HevofoiCnwmfHp3CXOLQzvzLt-Bc3o",
-  "AIzaSyCW2Zx5im1hLxjHTEz5OQttHVck1ipjodI"
-,
+  "AIzaSyCW2Zx5im1hLxjHTEz5OQttHVck1ipjodI",
   "AIzaSyC_iidLA0605e9kXRzcJvD15EDtdjIUnWo",
   "AIzaSyCTpGxuxmwAIu5i0uGFBsDGlAyUe5EVXQ0",
   "AIzaSyBfoVEM51ky2ElRJTRLOUVI-O1wgyaEYdk",
@@ -388,7 +378,45 @@ const apiKeys = [
   "AIzaSyCdrnAYqVjIfweWZj1bgAGLlswitdLR1nQ",
   "AIzaSyCU_a3Vzkh3FsD-6sbwN_NPC--xvBsXYmE",
   "AIzaSyDHKAwOp5EFySahUqgsuFg3OqSXAOqHEp8",
-  "AIzaSyBeMNrkI5tIQeMLIysc2_iFNY492M5NY74"];
+  "AIzaSyBeMNrkI5tIQeMLIysc2_iFNY492M5NY74",
+  "AIzaSyDLPPw_oYwYwuLtXqMP7ybJDXUz4jACf0k",
+  "AIzaSyAeKECCxDMKmHDJ8v89TD3hOje9WHeRzZI",
+  "AIzaSyCwyPjgfg1omXvyydFDaNEaOpP5YDZ_q14",
+  "AIzaSyAJmPxdmukxzVkavPYHrKaRyFGM5h5CXAc",
+  "AIzaSyBUVBhnjUTTe2Dg0jVSEsQa4DoihCJ0EOs",
+  "AIzaSyCAsGRkEsajkQF23HZAlvKPjW0kFqBmYDo",
+  "AIzaSyBn9q9nHLa56fTb-g8lKWTzzBXZch7NKls",
+  "AIzaSyB8qREEcCxs3hrSLCNzBzLLs45uec3MSuY",
+  "AIzaSyC_iH3SCgZNQRR14WubRcK1PDoWXmMckBE",
+  "AIzaSyAjzR7tMqWp5_19CD-hPjBXn3Jo0HWC6II",
+  "AIzaSyCcV_XPpqi9sFYxY7hCZnxVgPhzsC1k3yU",
+  "AIzaSyCxHnjFOiorHVzcP7YbFSMwYTpik1Mq7aw",
+  "AIzaSyCggEbBgXwvRHvWXCBH4jVYxYMHtLdFGNA",
+  "AIzaSyALTp3VtGgeSnhszWk0_vyb_nTNMGhqZgk",
+  "AIzaSyDbI3xhILjkyG0wNreNLHOrKoPLI6HsFx4",
+  "AIzaSyBdaVpT-Uk9JoQJjCin4fLlcD9mzlDJ_EU",
+  "AIzaSyDrA3Mxx8JAQZ3z3znp-OSTcaFZhCmpKV4",
+  "AIzaSyD0ZrgIrfMcPibcNfeaWVCRjxtqIgO0bKw",
+  "AIzaSyD3FUtiq-raYsizA6gKjlkz_n9Alivqf9s",
+  "AIzaSyBd5soLLfeng_LUd7gCOwMI4aSkb1YLNns",
+  "AIzaSyB--9OJU3KMmffbSk2lKqLUCmH4kK4sfJA",
+  "AIzaSyDpg-PEEuL1NDsD7JwaIOPtHqk84MdedzA",
+  "AIzaSyAHTypgzusGSyDxtkASbZg_rMH-wZ2zWeU",
+  "AIzaSyD7VrVp4__aivfskBGtgEGI71C64DJ3e4A",
+  "AIzaSyCF1g0NEpOxXw7YsBVjZd4GvKQHjQrqk_Q",
+  "AIzaSyA_h6KMu4hf3mt9TUKeGe0ukfSJjpToEwc",
+  "AIzaSyBs88yv8md-F0aMPs2CNezGXRf8d0Ozw0A",
+  "AIzaSyBbDm4Pc-jDJUS2uU9qniLrG6KcTIcHi28",
+  "AIzaSyAmh4CbOBxuDWUeFuzPJii6E7CPJ_xbWJE",
+  "AIzaSyBe9bi-oP6inb00cw8nB31vnYrHmTfFBPk",
+  "AIzaSyCwqw4d5me8IIj9t3bYTG4ENhrJpnkB0ww",
+  "AIzaSyAgGnBiEqv5qqu6AIIMLUEQ4tFUKpMHNd4",
+  "AIzaSyCQOJHxn6GgTe_av9ulBRi3FDa_i5qkKag",
+  "AIzaSyBOne__kipq0wQwBuQxXIl6Fs1_fLcQC5U",
+  "AIzaSyDplRy3Bzhw9079Msztvx0kvpWTAPNkBhc",
+  "AIzaSyA42AechinH-Gh4qirm_TbbodwiBafD9_A",
+  "AIzaSyD3d0A5MsnP33uQ20seYBr_t9egbU1jmGc"
+];
 
 let startOffset = 0; // rotates which keys are first in the race
 
@@ -513,7 +541,6 @@ document.getElementById('input').addEventListener('input', e => {
 renderHistory();
 startNewSession();
 </script>
-
 <script>
 // Splash screen timeout
 window.addEventListener('load', () => {
@@ -525,10 +552,5 @@ window.addEventListener('load', () => {
   }, 900);
 });
 </script>
-
 </body>
 </html>
-
-
-
-
